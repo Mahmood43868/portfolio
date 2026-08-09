@@ -1,0 +1,311 @@
+@import "tailwindcss";
+
+/* next-themes sets class="dark" on <html> */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ─────────────────────────────────────────────────────────────
+   Design tokens.
+   Light = warm paper. Dark = deep ink. One accent, one signal
+   colour, and a deliberately narrow type scale.
+   ───────────────────────────────────────────────────────────── */
+:root {
+  --bg: #f6f4ef;
+  --bg-raised: #fffdf9;
+  --bg-sunken: #edeae2;
+  --fg: #16191c;
+  --fg-muted: #5c6266;
+  --fg-subtle: #8b9296;
+  --border: #ddd8cd;
+  --border-strong: #c6c0b2;
+  --accent: #0b7f6c;
+  --accent-fg: #ffffff;
+  --accent-soft: #d8efe9;
+  --signal: #c2410c;
+  --grid: rgba(22, 25, 28, 0.07);
+  --shadow: 0 1px 2px rgba(22, 25, 28, 0.05), 0 8px 24px -12px rgba(22, 25, 28, 0.14);
+  --lift: 0 2px 4px rgba(22, 25, 28, 0.04), 0 18px 40px -20px rgba(22, 25, 28, 0.22);
+  --glow-a: rgba(11, 127, 108, 0.14);
+  --glow-b: rgba(194, 65, 12, 0.07);
+}
+
+/* True black. Two notes on why this isn't just `--bg: #000` and done:
+
+   1. Nothing can be darker than black, so the elevation ladder inverts here.
+      `sunken` sits a shade ABOVE the page instead of below it — otherwise the
+      skill meters' unfilled track, the tag chips and the scrollbar track all
+      vanish into the background.
+   2. The greys are neutral, not the green-tinted ones the light theme pairs
+      with warm paper. A tinted grey next to pure black reads as a colour cast,
+      not as a deliberate warmth. */
+:root.dark {
+  --bg: #000000;
+  --bg-raised: #121212;
+  --bg-sunken: #0a0a0a;
+  --fg: #f2f2f2;
+  --fg-muted: #a3a3a3;
+  --fg-subtle: #838383;
+  --border: #232323;
+  --border-strong: #3a3a3a;
+  --accent: #34e0bd;
+  --accent-fg: #000000;
+  --accent-soft: rgba(52, 224, 189, 0.13);
+  --signal: #ff8a4c;
+  /* Pure black swallows a faint line, so the grid needs roughly twice the
+     alpha it did on the old near-black background to read the same. */
+  --grid: rgba(255, 255, 255, 0.1);
+  /* A black shadow on a black page is invisible, so elevation is carried by
+     the borders and by --bg-raised. This only softens the card edge. */
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.6), 0 8px 24px -12px rgba(0, 0, 0, 0.9);
+  /* Same reason a card can't "lift" with a drop shadow here: there is nothing
+     darker to cast onto. A hairline accent ring plus a faint bloom reads as
+     elevation on black in the way a shadow does on paper. */
+  --lift: 0 0 0 1px rgba(52, 224, 189, 0.16), 0 18px 44px -22px rgba(52, 224, 189, 0.3);
+  --glow-a: rgba(52, 224, 189, 0.17);
+  --glow-b: rgba(255, 138, 76, 0.07);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-raised: var(--bg-raised);
+  --color-sunken: var(--bg-sunken);
+  --color-fg: var(--fg);
+  --color-muted: var(--fg-muted);
+  --color-subtle: var(--fg-subtle);
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+  --color-signal: var(--signal);
+
+  --font-display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, SFMono-Regular, monospace;
+
+  --shadow-card: var(--shadow);
+  --shadow-lift: var(--lift);
+}
+
+/* ── Base ─────────────────────────────────────────────────── */
+/* This MUST stay inside `@layer base`. Unlayered CSS outranks every cascade
+   layer, so at top level this `*` rule silently beat every `border-*` utility
+   Tailwind generates — `hover:border-line-strong` and friends did nothing. */
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* Faint engineering-paper grid, sits behind everything */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: 64px 64px;
+  /* The layer is fixed, so this vignette is relative to the viewport, not the
+     document — it reaches roughly this far down the screen at any scroll
+     position. It used to fade out by 45% of the height, which left the lower
+     half of every screenful plain. Still a vignette rather than a flat tile,
+     so the grid stays background texture and never competes with the text. */
+  mask-image: radial-gradient(ellipse 130% 100% at 50% 0%, #000 42%, transparent 92%);
+}
+
+::selection {
+  background-color: var(--accent);
+  color: var(--accent-fg);
+}
+
+/* ── Focus: visible, never ugly ───────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ── Scrollbar ────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-sunken);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 99px;
+  border: 3px solid var(--bg-sunken);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--fg-subtle);
+}
+
+/* ── Utilities ────────────────────────────────────────────── */
+@utility label {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-subtle);
+}
+
+@utility shell {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+/* Soft accent bloom behind the hero — the one focal light source on the page.
+   Two flat radial gradients rather than a blurred element: a large
+   `filter: blur()` makes the compositor re-rasterise the layer on every scroll
+   frame, and this renders identically for free. */
+@utility glow {
+  position: absolute;
+  inset: -25% -15% auto -15%;
+  height: 80%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 45% 55% at 25% 35%, var(--glow-a), transparent 70%),
+    radial-gradient(ellipse 40% 50% at 72% 8%, var(--glow-b), transparent 70%);
+}
+
+/* Card that rises under the cursor.
+
+   Uses the independent `translate` property, NOT `transform`. These cards are
+   wrapped in <Reveal>, which animates them in with Motion — and Motion writes
+   an inline `transform`, which would win the cascade and silently swallow a
+   hover `transform: translateY()`. `translate` is a separate property that
+   composes on top, so the two never fight.
+
+   Only `translate` and `box-shadow` animate, both compositor-friendly, so this
+   never triggers layout. The global reduced-motion rule collapses the duration,
+   which leaves the hover state instant rather than absent. */
+@utility lift {
+  transition:
+    translate 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  &:hover {
+    translate: 0 -4px;
+    box-shadow: var(--lift);
+    border-color: var(--border-strong);
+  }
+}
+
+/* Animated underline for inline links */
+@utility link {
+  color: var(--fg);
+  text-decoration: none;
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-size: 0% 1.5px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  &:hover {
+    background-size: 100% 1.5px;
+  }
+}
+
+/* ── Keyframes ────────────────────────────────────────────── */
+@keyframes caret {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-caret {
+  animation: caret 1.05s steps(1) infinite;
+}
+.animate-marquee {
+  animation: marquee 38s linear infinite;
+}
+.animate-pulse-dot {
+  animation: pulse-dot 2.2s ease-in-out infinite;
+}
+.animate-rise {
+  animation: rise 0.3s ease-out both;
+}
+
+/* ── Respect reduced motion ───────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Print: make the page a usable one-pager ──────────────── */
+@media print {
+  body::before,
+  [data-noprint] {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+    color: #000;
+  }
+}
