@@ -4,6 +4,16 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        source: "/resume.docx",
+        headers: [
+          {
+            key: "Content-Disposition",
+            value: 'attachment; filename="Mahmood-Ul-Hassan-Resume.docx"',
+          },
+          { key: "Cache-Control", value: "public, max-age=0, must-revalidate" },
+        ],
+      },
+      {
         // The resume lives at the clean URL /resume.pdf, but a recruiter who
         // hits Save ends up with a folder full of files called "resume.pdf".
         // `inline` keeps it previewing in the browser tab rather than forcing

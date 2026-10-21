@@ -27,6 +27,7 @@ export const profile = {
     linkedin: "https://www.linkedin.com/in/mahmood-hassan43868",
     // Drop your PDF at public/resume.pdf and this just works
     resume: "/resume.pdf",
+    resumeWord: "/resume.docx",
   },
 
   // ── About ─────────────────────────────────────────────────

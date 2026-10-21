@@ -15,6 +15,16 @@ export function Footer() {
           </p>
         </div>
 
+        <div className="flex items-center gap-3 text-sm text-muted" data-noprint>
+          <span>Resume:</span>
+          <a href={profile.socials.resume} download="Mahmood-Ul-Hassan-Resume.pdf" className="rounded px-1 py-2 hover:text-fg">
+            PDF
+          </a>
+          <a href={profile.socials.resumeWord} download="Mahmood-Ul-Hassan-Resume.docx" className="rounded px-1 py-2 hover:text-fg">
+            Word
+          </a>
+        </div>
+
         <div className="flex items-center gap-1" data-noprint>
           {[
             { href: profile.socials.github, Icon: Github, label: "GitHub" },
