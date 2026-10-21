@@ -109,10 +109,55 @@ export const profile = {
   // `metrics` are the single most persuasive thing on this page — use real numbers.
   projects: [
     {
+      title: "Bilal Glass Inventory",
+      year: "2026",
+      featured: true,
+      status: "In development · Private source",
+      blurb: "Inventory and production management for a car-mirror business.",
+      description:
+        "A business application connecting raw-glass imports, cutting and production, reusable leftover material, finished mirrors, sales, invoices and customer payments. Built with React and TypeScript, a Django REST API, and PostgreSQL. Core workflows are implemented; final release work is ongoing.",
+      highlights: [
+        "Tracks raw glass, reusable leftovers and finished mirrors as separate inventory stages.",
+        "Coordinates sales, invoices, payments and customer balances through backend service logic.",
+        "Uses database transactions, row locking and idempotency handling for stock and financial operations.",
+        "Includes automated tests for business workflows, permissions and concurrent inventory changes.",
+      ],
+      metrics: [
+        { value: "3 stages", label: "raw glass, reusable leftovers and finished mirrors" },
+        { value: "PostgreSQL", label: "transactions and inventory integrity" },
+      ],
+      tags: ["React", "TypeScript", "Python", "Django REST Framework", "PostgreSQL", "Docker"],
+      github: "",
+      demo: "",
+    },
+    {
+      title: "Insights Academy",
+      year: "2026",
+      featured: true,
+      status: "Academy management system",
+      blurb: "Student enrollment, fees, test reports and a parent portal in one application.",
+      description:
+        "A full-stack academy management system built with React, Express and MongoDB. Administrators manage students, enrollments, fees and academic reports, while guardians have a read-only portal for their own children's records.",
+      highlights: [
+        "Coordinates student enrollment, linked guardian accounts and payments using MongoDB transactions.",
+        "Supports fee invoices, payment history, outstanding balances and printable payment receipts.",
+        "Enforces administrator, staff, sub-admin and parent access rules on the server.",
+        "Includes test-report workflows, database backup and restore tools, and automated frontend and API tests.",
+      ],
+      metrics: [
+        { value: "Parent portal", label: "access limited to linked children's records" },
+        { value: "MongoDB", label: "transactions for multi-record workflows" },
+      ],
+      tags: ["React", "JavaScript", "Express", "MongoDB", "Mongoose", "JWT", "Tailwind CSS"],
+      github: "https://github.com/insightsacademyedu-afk/Insights-Academy",
+      demo: "",
+    },
+    {
       // ── REAL PROJECT ──────────────────────────────────────
       title: "Blogify",
       year: "2026",
-      featured: true,
+      featured: false,
+      status: "Public repository",
       blurb: "A full-stack blogging platform with accounts, authoring and image uploads.",
       description:
         "A server-rendered blogging site where visitors register, sign in, and publish posts with cover images. Express handles routing, EJS renders the views, and MongoDB stores users and posts through Mongoose. Sessions are JWTs held in cookies, and passwords are hashed with bcrypt rather than stored anywhere in the clear.",
@@ -122,89 +167,34 @@ export const profile = {
         "Laid out as a conventional MVC application — separate controller, model, routes, middleware and utils directories — rather than one oversized entry file.",
         "Documented with a README covering environment variables, local setup, and step-by-step deployment to Railway with a provisioned MongoDB instance.",
       ],
-      // TODO — swap these for measured numbers once you can quantify something:
-      // posts seeded, average response time, Lighthouse score, upload size limit.
       metrics: [
         { value: "JWT", label: "cookie sessions, bcrypt-hashed passwords" },
         { value: "MVC", label: "controllers, models, routes, middleware" },
       ],
       tags: ["Node.js", "Express", "MongoDB", "Mongoose", "EJS", "JWT", "Multer", "Railway"],
       github: "https://github.com/mahmood43868/Blog-Post",
-      // TODO — deploy it on Railway (your README already documents how) and put
-      // the URL here. A live demo a recruiter can click is worth more than any
-      // description; an unclickable project gets skimmed past.
       demo: "",
     },
     {
-      title: "Ledgerly",
+      title: "Order Automation",
       year: "2026",
-      featured: true,
-      blurb: "Double-entry accounting for freelancers, built to survive an audit.",
+      featured: false,
+      status: "University final-year project · Private source",
+      blurb: "An AI-assisted ordering and delivery platform — my university FYP.",
       description:
-        "A full accounting app with a real double-entry ledger underneath — every transaction writes balanced debit and credit rows, so the books can never silently drift. Handles multi-currency invoices, recurring entries, and generates a P&L and balance sheet straight from the journal.",
+        "A university final-year project connecting WhatsApp order intake, inventory reservations, a live business dashboard and driver deliveries. A LangGraph agent powered by Gemini handles English and Roman Urdu conversations, while a Capacitor driver app supports queued offline actions.",
       highlights: [
-        "Designed an append-only ledger schema in PostgreSQL; corrections post reversing entries instead of mutating history.",
-        "Cut the monthly-report query from 8.2s to 240ms with a materialised view and a covering index.",
-        "Background job queue (BullMQ) generates recurring invoices and retries failed sends with exponential backoff.",
+        "A conversational ordering agent searches the product catalog, reserves stock and supports human escalation.",
+        "A Next.js organization dashboard provides Kanban order tracking, driver assignment and agent logs.",
+        "A mobile driver app combines realtime updates with an offline action queue.",
+        "A Turborepo monorepo shares UI components, database types and utilities across the web and driver apps.",
       ],
       metrics: [
-        { value: "240ms", label: "report query (was 8.2s)" },
-        { value: "94%", label: "test coverage" },
+        { value: "FYP", label: "university final-year project" },
+        { value: "2 apps", label: "business dashboard and driver delivery app" },
       ],
-      tags: ["Next.js", "TypeScript", "PostgreSQL", "Prisma", "Redis", "Stripe"],
-      github: "https://github.com/your-username/ledgerly", // TODO
-      demo: "https://ledgerly.example.com", // TODO — or "" to hide the button
-    },
-    {
-      title: "Transit Pulse",
-      year: "2025",
-      featured: true,
-      blurb: "Live bus-arrival predictions from a city GTFS feed.",
-      description:
-        "Ingests a public GTFS-Realtime feed, reconciles it against the static timetable, and serves arrival predictions over WebSockets. The interesting part was handling vehicles that go dark mid-route — the model falls back to schedule-plus-drift rather than showing nothing.",
-      highlights: [
-        "Streaming ingest pipeline in Python processing ~40k vehicle updates per minute.",
-        "WebSocket fan-out with Redis pub/sub; a single node holds 2k concurrent map viewers.",
-        "Prediction error measured against ground truth: median 48s across a two-week window.",
-      ],
-      metrics: [
-        { value: "40k/min", label: "vehicle updates ingested" },
-        { value: "48s", label: "median prediction error" },
-      ],
-      tags: ["Python", "FastAPI", "Redis", "WebSockets", "React", "Mapbox"],
-      github: "https://github.com/your-username/transit-pulse", // TODO
-      demo: "",
-    },
-    {
-      title: "Rulekit",
-      year: "2025",
-      featured: false,
-      blurb: "A tiny rules engine that compiles JSON logic to a JS predicate.",
-      description:
-        "Open-source library for evaluating user-authored business rules safely. Rules are stored as JSON, compiled once into a closure, then run without eval or dynamic Function bodies.",
-      highlights: [
-        "Zero runtime dependencies, 4.1kB gzipped.",
-        "Property-based test suite (fast-check) covering operator precedence and short-circuit behaviour.",
-      ],
-      metrics: [{ value: "4.1kB", label: "gzipped" }],
-      tags: ["TypeScript", "npm", "Vitest"],
-      github: "https://github.com/your-username/rulekit", // TODO
-      demo: "",
-    },
-    {
-      title: "Sift",
-      year: "2024",
-      featured: false,
-      blurb: "Semantic search over your own PDF library, running locally.",
-      description:
-        "Drop a folder of PDFs in and get chunk-level semantic search. Embeddings are computed once and stored in SQLite with a vector extension, so the whole thing runs offline after the first index.",
-      highlights: [
-        "Chunking strategy respects headings and tables instead of splitting on a fixed token count.",
-        "Indexes a 1,200-page corpus in under 90 seconds on a laptop CPU.",
-      ],
-      metrics: [{ value: "90s", label: "to index 1,200 pages" }],
-      tags: ["Python", "SQLite", "Embeddings", "Streamlit"],
-      github: "https://github.com/your-username/sift", // TODO
+      tags: ["Next.js", "TypeScript", "LangGraph", "Gemini", "Supabase", "PostgreSQL", "Capacitor", "Turborepo"],
+      github: "",
       demo: "",
     },
   ],
@@ -270,7 +260,7 @@ export const profile = {
   seo: {
     // Set this to your real domain before deploying — it drives
     // canonical URLs, sitemap, and Open Graph image resolution.
-    siteUrl: "https://your-domain.com", // TODO
+    siteUrl: "https://mahmood-hassan-portfolio.vercel.app",
     description:
       "Portfolio of a full-stack software engineer — projects, experience, and an AI assistant that answers questions about my background.",
     keywords: [
@@ -319,6 +309,7 @@ export function buildResumeContext(): string {
   lines.push("PROJECTS:");
   p.projects.forEach((proj) => {
     lines.push(`  ${proj.title} (${proj.year}) — ${proj.blurb}`);
+    lines.push(`    Status: ${proj.status}`);
     lines.push(`    ${proj.description}`);
     proj.highlights.forEach((h) => lines.push(`    - ${h}`));
     lines.push(`    Tech: ${proj.tags.join(", ")}`);

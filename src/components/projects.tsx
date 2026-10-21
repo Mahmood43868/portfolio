@@ -70,6 +70,7 @@ function Featured({ project, index }: { project: Project; index: number }) {
           <h3 className="mt-4 font-display text-2xl font-semibold tracking-tight sm:text-3xl">
             {project.title}
           </h3>
+          <p className="mt-2 font-mono text-xs text-subtle">{project.status}</p>
           <p className="mt-2 text-base text-muted">{project.blurb}</p>
           <p className="mt-5 leading-relaxed text-pretty text-muted">{project.description}</p>
 
@@ -120,6 +121,7 @@ function Compact({ project, index }: { project: Project; index: number }) {
         <span className="font-mono text-xs text-subtle">{project.year}</span>
       </div>
 
+      <p className="mt-2 font-mono text-xs text-subtle">{project.status}</p>
       <p className="mt-2 text-sm text-muted">{project.blurb}</p>
       <p className="mt-3 flex-1 text-sm leading-relaxed text-subtle">{project.description}</p>
 
@@ -146,7 +148,7 @@ export function Projects() {
       id="projects"
       index="03 / Projects"
       title="Things I've built"
-      lede="Each one solved a problem I actually had. The numbers are measured, not estimated."
+      lede="Selected work across business software, academy management, web publishing and AI-assisted order automation."
     >
       <div className="space-y-6">
         {featured.map((p, i) => (
